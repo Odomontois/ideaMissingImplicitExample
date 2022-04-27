@@ -4,8 +4,6 @@ import cats.{Applicative, Eval, Monoid, Traverse}
 
 object ExactSizeSeq {
 
-  // trick to add local type as type parameter
-  // to enforce search of implicits inside this object
   type NSeq[N <: Int, +A]
 
   def fromVector[N <: Int, A](v: Vector[A])(implicit size: ValueOf[N]): Either[String, NSeq[N, A]] =
@@ -25,7 +23,7 @@ object ExactSizeSeq {
 
   private val vectorTraverse = Traverse[Vector]
 
-  private class FunctorInstance[N <: Int](implicit size: ValueOf[N], ev: N <:< Int)
+  private class FunctorInstance[N <: Int](implicit size: ValueOf[N])
     extends Traverse[NSeq[N, *]]
       with Applicative[NSeq[N, *]] {
     private val n = size.value
